@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini-Tasks
 
-## Getting Started
+Mini-Tasks is a decentralized application (dApp) built on Morph Holesky Testnet, allowing users to create tasks, submit work, and get rewarded in cryptocurrency. it leverages smart contracts to ensure transparency, fairness, and security in task management and reward distribution.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Task Creation**: Users can post tasks with specific details and a reward in ETH.
+- **Submissions**: Anyone can submit their work for a task. Submissions include a title, description, and a file (stored on IPFS).
+- **Reward Distribution**: Task creators can review submissions and select a winner, automatically transferring the reward to the winner's address.
+- **Blockchain-Powered**: All actions, including task creation, submissions, and reward distribution, are recorded on the Morph Holesky Testnet.
+- **IPFS Integration**: Files related to submissions are stored on the InterPlanetary File System (IPFS), ensuring decentralized and immutable storage.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How It Works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Task Creation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Connect Wallet**: To create a task, users need to connect their EVM wallet (powere by ReOwn).
+2. **Create Task**: Users fill out a form with the task's title, description, and the reward amount in ETH.
+3. **Post Task**: Upon submission, the task details are recorded on the chain, and the reward is securely held in the smart contract until a winner is chosen.
 
-## Learn More
+### 2. Submitting Work
 
-To learn more about Next.js, take a look at the following resources:
+1. **Browse Tasks**: Anyone can view available tasks on the platform.
+2. **Submit Work**: Users can submit their work by filling out a form with a title, description, and file upload. The file is uploaded to IPFS, and the corresponding CID (Content Identifier) is stored on the blockchain.
+3. **View Submissions**: Task creators and other users can view all submissions for a task.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Reward Distribution
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Review Submissions**: The task creator reviews the submissions and selects a winner.
+2. **Distribute Reward**: The smart contract automatically transfers the reward to the winner's address.
