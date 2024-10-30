@@ -86,7 +86,7 @@ const Task = () => {
             setSubmissionDescription('');
             setSubmissionFile(null);
             setShowModal(false);
-            router.reload(); // Reload the page to see the new submission
+            router.refresh(); // Reload the page to see the new submission
           },
           onError: (error) => {
             console.error(error);
@@ -112,7 +112,7 @@ const Task = () => {
         {
           onSuccess: () => {
             toast.success('Winner selected successfully!');
-            router.reload(); // Reload the page to see the updated state
+            router.refresh(); // Reload the page to see the updated state
           },
           onError: (error) => {
             console.error(error);
