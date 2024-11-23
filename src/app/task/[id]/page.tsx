@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useReadContract, useWriteContract, useAccount } from 'wagmi';
@@ -8,11 +6,12 @@ import { toast } from 'react-toastify';
 import { TASK_CONTRACT_ADDRESS, TASK_CONTRACT_ABI } from '@/utils/contracts';
 import { pinFileToIPFS } from '@/utils/ipfs';
 import { shortenAddress } from '@/utils/shorten';
-
+import Spinner from '@/components/Spinner'; // Import the Spinner component
 
 const Task = () => {
   const [task, setTask] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false); // State for showing spinner
   const [showModal, setShowModal] = useState(false);
   const [submissionTitle, setSubmissionTitle] = useState('');
   const [submissionDescription, setSubmissionDescription] = useState('');
@@ -20,14 +19,15 @@ const Task = () => {
   const { address } = useAccount();
   const router = useRouter();
   const { id } = useParams();
-  const { data: taskData }: any = useReadContract({
+
+  const { data: taskData, isLoading: isTaskLoading }: any = useReadContract({
     address: TASK_CONTRACT_ADDRESS,
     abi: TASK_CONTRACT_ABI,
     functionName: 'tasks',
     args: [id],
   });
 
-  const { data: submissionData }: any = useReadContract({
+  const { data: submissionData, isLoading: isSubmissionsLoading }: any = useReadContract({
     address: TASK_CONTRACT_ADDRESS,
     abi: TASK_CONTRACT_ABI,
     functionName: 'getSubmissions',
@@ -41,10 +41,10 @@ const Task = () => {
     if (taskData) {
       setTask({
         poster: taskData[0],
-        reward: Number(taskData[1]), // Reward in Wei
+        reward: Number(taskData[1]),
         title: taskData[2],
         description: taskData[3],
-        active: taskData[4], // 'active' indicates if the task is still open
+        active: taskData[4],
       });
     }
     if (submissionData) {
@@ -66,12 +66,9 @@ const Task = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
-      // Upload the file to IPFS and get the CID
       const cid = await pinFileToIPFS(submissionFile, submissionFile.name);
-
-      console.log('CID:', cid, submissionTitle, submissionDescription);
-      // Submit the task
       await submitTaskWrite(
         {
           address: TASK_CONTRACT_ADDRESS,
@@ -86,7 +83,7 @@ const Task = () => {
             setSubmissionDescription('');
             setSubmissionFile(null);
             setShowModal(false);
-            router.refresh(); // Reload the page to see the new submission
+            router.refresh();
           },
           onError: (error) => {
             console.error(error);
@@ -97,10 +94,13 @@ const Task = () => {
     } catch (error) {
       console.error(error);
       toast.error('Failed to upload file.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSelectWinner = async (submissionIndex: number) => {
+    setIsLoading(true);
     try {
       await selectWinnerWrite(
         {
@@ -112,7 +112,7 @@ const Task = () => {
         {
           onSuccess: () => {
             toast.success('Winner selected successfully!');
-            router.refresh(); // Reload the page to see the updated state
+            router.refresh();
           },
           onError: (error) => {
             console.error(error);
@@ -123,8 +123,19 @@ const Task = () => {
     } catch (error) {
       console.error('Failed to select winner:', error);
       toast.error('Failed to select winner.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // Show spinner if task or submissions are loading
+  if (isTaskLoading || isSubmissionsLoading || isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center rounded-lg min-h-screen py-2 bg-gray-900 font-mono text-sm text-gray-200">
@@ -191,7 +202,6 @@ const Task = () => {
         ))}
       </div>
 
-      {/* Modal for creating submission */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-md">
