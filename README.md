@@ -1,6 +1,6 @@
 # Mini-Tasks
 
-Mini-Tasks is a decentralized application (dApp) built on Morph Holesky Testnet, allowing users to create tasks, submit work, and get rewarded in cryptocurrency. it leverages smart contracts to ensure transparency, fairness, and security in task management and reward distribution.
+Mini-Tasks is a decentralized application (dApp) built on Morph Holesky Testnet, allowing users to create tasks, submit work, and get rewarded in cryptocurrency. It leverages smart contracts to ensure transparency, fairness, and security in task management and reward distribution.
 
 ## Features
 
